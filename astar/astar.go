@@ -112,33 +112,33 @@ func Run(
 	fScore[start] = getDistance(start, end)
 
 	for len(openSet) != 0 {
-		current := minScore(openSet, fScore)
-		pick := openSet[current]
-		openSet = append(openSet[:current], openSet[current+1:]...)
+		currentIndex := minScore(openSet, fScore)
+		current := openSet[currentIndex]
+		openSet = append(openSet[:currentIndex], openSet[currentIndex+1:]...)
 
-		fmt.Println(pick)
-		if pick == end {
+		fmt.Println(current)
+		if current == end {
 
 			return reconstructPath(cameFrom, end)
 		}
 
-		neighborhood := getNeighborhood(w, pick)
+		neighborhood := getNeighborhood(w, current)
 
 		for _, neighbor := range neighborhood {
 			_, found := gScore[neighbor]
 			if !found {
-				gScore[neighbor] = gScore[pick] + 1
-				fScore[neighbor] = gScore[pick] + 1 + getDistance(neighbor, end)
-				cameFrom[neighbor] = pick
+				gScore[neighbor] = gScore[current] + 1
+				fScore[neighbor] = gScore[current] + 1 + getDistance(neighbor, end)
+				cameFrom[neighbor] = current
 				_, elementFound := Find(openSet, neighbor)
 				if !elementFound {
 					openSet = append(openSet, neighbor)
 				}
 			} else {
-				if gScore[pick]+1 < gScore[neighbor] {
-					gScore[neighbor] = gScore[pick] + 1
-					fScore[neighbor] = gScore[pick] + 1 + getDistance(neighbor, end)
-					cameFrom[neighbor] = pick
+				if gScore[current]+1 < gScore[neighbor] {
+					gScore[neighbor] = gScore[current] + 1
+					fScore[neighbor] = gScore[current] + 1 + getDistance(neighbor, end)
+					cameFrom[neighbor] = current
 					_, elementFound := Find(openSet, neighbor)
 					if !elementFound {
 						openSet = append(openSet, neighbor)
