@@ -47,9 +47,7 @@ func getNeighborhood(
 
 // Give distance between two nodes
 func getDistance(a worldgen.Coordinate, b worldgen.Coordinate) float64 {
-	var A = math.Abs(float64(int64(a.X - b.X)))
-	var B = math.Abs(float64(int64(a.Y - b.Y)))
-	return math.Sqrt(A*A + B*B)
+	return math.Abs(float64(int64(a.X-b.X))) + math.Abs(float64(int64(a.Y-b.Y)))
 }
 
 type pair struct {
