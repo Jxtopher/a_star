@@ -1,4 +1,4 @@
-package worldgenerator
+package worldgen
 
 import (
 	"fmt"

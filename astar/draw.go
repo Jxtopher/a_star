@@ -5,13 +5,13 @@ import (
 	"image"
 	"image/color"
 
-	"github.com/jxtopher/a_star/worldgenerator"
+	"github.com/jxtopher/a_star/worldgen"
 	"github.com/llgcode/draw2d/draw2dimg"
 	"github.com/llgcode/draw2d/draw2dkit"
 )
 
 // Plot world
-func Plot(w worldgenerator.World, path []worldgenerator.Coordinate) {
+func Plot(w worldgen.World, path []worldgen.Coordinate) {
 	// dest := draw2dpdf.NewPdf("L", "mm", "A4")
 	// gc := draw2dpdf.NewGraphicContext(dest)
 	dest := image.NewRGBA(image.Rect(0, 0, int(w.Xsize*10), int(w.Ysize*10)))
@@ -31,7 +31,7 @@ func Plot(w worldgenerator.World, path []worldgenerator.Coordinate) {
 	var i, j uint64
 	for i = 0; i < w.Xsize; i++ {
 		for j = 0; j < w.Ysize; j++ {
-			if w.Ground[i][j] == worldgenerator.Bloc {
+			if w.Ground[i][j] == worldgen.Bloc {
 				draw2dkit.Rectangle(
 					gc, float64(i*10), float64(j*10), float64(i*10+10), float64(j*10+10),
 				)
