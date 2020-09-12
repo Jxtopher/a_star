@@ -7,14 +7,20 @@ import (
 	"github.com/jxtopher/a_star/worldgenerator"
 )
 
-// Give all free neighord node  of the node chose
-func getNeighborhood(w worldgenerator.World, pick worldgenerator.Coordinate) []worldgenerator.Coordinate {
+// Give all free neighord nodes of the node chose
+func getNeighborhood(
+	w worldgenerator.World, pick worldgenerator.Coordinate,
+) []worldgenerator.Coordinate {
 	var neighborhood []worldgenerator.Coordinate
 
 	if pick.Y < w.Ysize-1 && w.Ground[pick.X][pick.Y+1] == worldgenerator.Empty {
-		neighborhood = append(neighborhood, worldgenerator.Coordinate{X: pick.X, Y: pick.Y + 1})
+		neighborhood = append(
+			neighborhood, worldgenerator.Coordinate{X: pick.X, Y: pick.Y + 1},
+		)
 	}
-	if pick.X < w.Xsize-1 && pick.Y < w.Ysize-1 && w.Ground[pick.X+1][pick.Y+1] == worldgenerator.Empty {
+	if pick.X < w.Xsize-1 && pick.Y < w.Ysize-1 &&
+		w.Ground[pick.X+1][pick.Y+1] == worldgenerator.Empty {
+		// then
 		neighborhood = append(neighborhood, worldgenerator.Coordinate{X: pick.X + 1, Y: pick.Y + 1})
 	}
 	if pick.X < w.Xsize-1 && w.Ground[pick.X+1][pick.Y] == worldgenerator.Empty {
@@ -78,7 +84,9 @@ func Find(slice []worldgenerator.Coordinate, val worldgenerator.Coordinate) (int
 }
 
 // reconstructionPath build the final path
-func reconstructPath(cameFrom map[worldgenerator.Coordinate]worldgenerator.Coordinate, end worldgenerator.Coordinate) []worldgenerator.Coordinate {
+func reconstructPath(
+	cameFrom map[worldgenerator.Coordinate]worldgenerator.Coordinate, end worldgenerator.Coordinate,
+) []worldgenerator.Coordinate {
 	var ret []worldgenerator.Coordinate
 	pick := end
 	_, found := cameFrom[pick]
@@ -91,8 +99,11 @@ func reconstructPath(cameFrom map[worldgenerator.Coordinate]worldgenerator.Coord
 	return ret
 }
 
-// Run ...
-func Run(w worldgenerator.World, start worldgenerator.Coordinate, end worldgenerator.Coordinate) []worldgenerator.Coordinate {
+func Run(
+	w worldgenerator.World,
+	start worldgenerator.Coordinate,
+	end worldgenerator.Coordinate,
+) []worldgenerator.Coordinate {
 	var openSet []worldgenerator.Coordinate
 	openSet = append(openSet, start)
 	cameFrom := make(map[worldgenerator.Coordinate]worldgenerator.Coordinate)
@@ -116,7 +127,6 @@ func Run(w worldgenerator.World, start worldgenerator.Coordinate, end worldgener
 		neighborhood := getNeighborhood(w, pick)
 
 		for _, neighbor := range neighborhood {
-			// fmt.Print(neighbor)
 			_, found := gScore[neighbor]
 			if !found {
 				gScore[neighbor] = gScore[pick] + 1

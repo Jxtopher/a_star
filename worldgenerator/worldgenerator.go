@@ -6,19 +6,15 @@ import (
 )
 
 const (
-	// Empty ...
 	Empty uint8 = 0
-	// Bloc ...
-	Bloc uint8 = 1
+	Bloc  uint8 = 1
 )
 
-// Coordinate ...
 type Coordinate struct {
 	X uint64
 	Y uint64
 }
 
-// World ...
 type World struct {
 	Xsize  uint64
 	Ysize  uint64

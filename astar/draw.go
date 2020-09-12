@@ -32,7 +32,9 @@ func Plot(w worldgenerator.World, path []worldgenerator.Coordinate) {
 	for i = 0; i < w.Xsize; i++ {
 		for j = 0; j < w.Ysize; j++ {
 			if w.Ground[i][j] == worldgenerator.Bloc {
-				draw2dkit.Rectangle(gc, float64(i*10), float64(j*10), float64(i*10+10), float64(j*10+10))
+				draw2dkit.Rectangle(
+					gc, float64(i*10), float64(j*10), float64(i*10+10), float64(j*10+10),
+				)
 			}
 		}
 	}
@@ -65,5 +67,4 @@ func Plot(w worldgenerator.World, path []worldgenerator.Coordinate) {
 	// Save to file
 	// draw2dpdf.SaveToPdfFile("hello.pdf", dest)
 	draw2dimg.SaveToPngFile("hello.png", dest)
-
 }

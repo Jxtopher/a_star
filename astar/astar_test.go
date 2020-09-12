@@ -33,5 +33,9 @@ func TestGetNeighborhood(t *testing.T) {
 }
 
 func TestGetDistance(t *testing.T) {
-	assert.Less(t, getDistance(worldgenerator.Coordinate{X: 50, Y: 50}, worldgenerator.Coordinate{X: 0, Y: 0})-70.71, 0.1, "")
+	distance := getDistance(
+		worldgenerator.Coordinate{X: 50, Y: 50},
+		worldgenerator.Coordinate{X: 0, Y: 0},
+	)
+	assert.Less(t, distance-70.71, 0.1, "")
 }
