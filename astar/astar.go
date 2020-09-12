@@ -7,6 +7,11 @@ import (
 	"github.com/jxtopher/a_star/worldgen"
 )
 
+type pair struct {
+	distance float64
+	cell     worldgen.Coordinate
+}
+
 // Give all free neighord nodes of the node chose
 func getNeighborhood(
 	w worldgen.World, pick worldgen.Coordinate,
@@ -48,11 +53,6 @@ func getNeighborhood(
 // Give distance between two nodes
 func getDistance(a worldgen.Coordinate, b worldgen.Coordinate) float64 {
 	return math.Abs(float64(int64(a.X-b.X))) + math.Abs(float64(int64(a.Y-b.Y)))
-}
-
-type pair struct {
-	distance float64
-	cell     worldgen.Coordinate
 }
 
 // Returns an index on the node's set with the minimum fScore
