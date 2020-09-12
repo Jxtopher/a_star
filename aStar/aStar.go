@@ -1,46 +1,46 @@
-package aStar
+package astar
 
 import (
 	"fmt"
 	"math"
 
-	"github.com/jxtopher/a_star/worldGenerator"
+	"github.com/jxtopher/a_star/worldgenerator"
 )
 
 // Give all free neighord node  of the node chose
-func getNeighborhood(w worldGenerator.World, pick worldGenerator.Coordinate) []worldGenerator.Coordinate {
-	var neighborhood []worldGenerator.Coordinate
+func getNeighborhood(w worldgenerator.World, pick worldgenerator.Coordinate) []worldgenerator.Coordinate {
+	var neighborhood []worldgenerator.Coordinate
 
-	if pick.Y < w.Y_size-1 && w.Ground[pick.X][pick.Y+1] == worldGenerator.Empty {
-		neighborhood = append(neighborhood, worldGenerator.Coordinate{pick.X, pick.Y + 1})
+	if pick.Y < w.Ysize-1 && w.Ground[pick.X][pick.Y+1] == worldgenerator.Empty {
+		neighborhood = append(neighborhood, worldgenerator.Coordinate{X: pick.X, Y: pick.Y + 1})
 	}
-	if pick.X < w.X_size-1 && pick.Y < w.Y_size-1 && w.Ground[pick.X+1][pick.Y+1] == worldGenerator.Empty {
-		neighborhood = append(neighborhood, worldGenerator.Coordinate{pick.X + 1, pick.Y + 1})
+	if pick.X < w.Xsize-1 && pick.Y < w.Ysize-1 && w.Ground[pick.X+1][pick.Y+1] == worldgenerator.Empty {
+		neighborhood = append(neighborhood, worldgenerator.Coordinate{X: pick.X + 1, Y: pick.Y + 1})
 	}
-	if pick.X < w.X_size-1 && w.Ground[pick.X+1][pick.Y] == worldGenerator.Empty {
-		neighborhood = append(neighborhood, worldGenerator.Coordinate{pick.X + 1, pick.Y})
+	if pick.X < w.Xsize-1 && w.Ground[pick.X+1][pick.Y] == worldgenerator.Empty {
+		neighborhood = append(neighborhood, worldgenerator.Coordinate{X: pick.X + 1, Y: pick.Y})
 	}
-	if pick.X < w.X_size-1 && pick.Y > 0 && w.Ground[pick.X+1][pick.Y-1] == worldGenerator.Empty {
-		neighborhood = append(neighborhood, worldGenerator.Coordinate{pick.X + 1, pick.Y - 1})
+	if pick.X < w.Xsize-1 && pick.Y > 0 && w.Ground[pick.X+1][pick.Y-1] == worldgenerator.Empty {
+		neighborhood = append(neighborhood, worldgenerator.Coordinate{X: pick.X + 1, Y: pick.Y - 1})
 	}
-	if pick.Y > 0 && w.Ground[pick.X][pick.Y-1] == worldGenerator.Empty {
-		neighborhood = append(neighborhood, worldGenerator.Coordinate{pick.X, pick.Y - 1})
+	if pick.Y > 0 && w.Ground[pick.X][pick.Y-1] == worldgenerator.Empty {
+		neighborhood = append(neighborhood, worldgenerator.Coordinate{X: pick.X, Y: pick.Y - 1})
 	}
-	if pick.X > 0 && pick.Y > 0 && w.Ground[pick.X-1][pick.Y-1] == worldGenerator.Empty {
-		neighborhood = append(neighborhood, worldGenerator.Coordinate{pick.X - 1, pick.Y - 1})
+	if pick.X > 0 && pick.Y > 0 && w.Ground[pick.X-1][pick.Y-1] == worldgenerator.Empty {
+		neighborhood = append(neighborhood, worldgenerator.Coordinate{X: pick.X - 1, Y: pick.Y - 1})
 	}
-	if pick.X > 0 && w.Ground[pick.X-1][pick.Y] == worldGenerator.Empty {
-		neighborhood = append(neighborhood, worldGenerator.Coordinate{pick.X - 1, pick.Y})
+	if pick.X > 0 && w.Ground[pick.X-1][pick.Y] == worldgenerator.Empty {
+		neighborhood = append(neighborhood, worldgenerator.Coordinate{X: pick.X - 1, Y: pick.Y})
 	}
-	if pick.X > 0 && pick.Y < w.Y_size-1 && w.Ground[pick.X-1][pick.Y+1] == worldGenerator.Empty {
-		neighborhood = append(neighborhood, worldGenerator.Coordinate{pick.X - 1, pick.Y + 1})
+	if pick.X > 0 && pick.Y < w.Ysize-1 && w.Ground[pick.X-1][pick.Y+1] == worldgenerator.Empty {
+		neighborhood = append(neighborhood, worldgenerator.Coordinate{X: pick.X - 1, Y: pick.Y + 1})
 	}
 
 	return neighborhood
 }
 
 // Give distance between two nodes
-func getDistance(a worldGenerator.Coordinate, b worldGenerator.Coordinate) float64 {
+func getDistance(a worldgenerator.Coordinate, b worldgenerator.Coordinate) float64 {
 	var A = math.Abs(float64(int64(a.X - b.X)))
 	var B = math.Abs(float64(int64(a.Y - b.Y)))
 	return math.Sqrt(A*A + B*B)
@@ -48,71 +48,96 @@ func getDistance(a worldGenerator.Coordinate, b worldGenerator.Coordinate) float
 
 type pair struct {
 	distance float64
-	cell     worldGenerator.Coordinate
+	cell     worldgenerator.Coordinate
 }
 
-func Run(w worldGenerator.World, start worldGenerator.Coordinate, end worldGenerator.Coordinate) []worldGenerator.Coordinate {
-	// w.Show()
-	m := make(map[worldGenerator.Coordinate]uint64)
+// Returns an index on the node's set with the minimum fScore
+func minScore(set []worldgenerator.Coordinate, fScore map[worldgenerator.Coordinate]float64) int {
+	minElement := 0
+	for i, element := range set {
+		if i < 1 {
+			continue
+		}
 
-	var path []worldGenerator.Coordinate
-	worklist := make([]pair, 0)
-	var pick worldGenerator.Coordinate = start
-	m[pick] = 0
-	for pick != end {
-		fmt.Print("pick>", pick, "\n")
+		if fScore[set[minElement]] < fScore[element] {
+			minElement = i
+		}
+	}
+	return minElement
+}
+
+// Find takes a slice and looks for an element in it. If found it will
+// return it's key, otherwise it will return -1 and a bool of false.
+func Find(slice []worldgenerator.Coordinate, val worldgenerator.Coordinate) (int, bool) {
+	for i, item := range slice {
+		if item == val {
+			return i, true
+		}
+	}
+	return -1, false
+}
+
+// reconstructionPath build the final path
+func reconstructPath(cameFrom map[worldgenerator.Coordinate]worldgenerator.Coordinate, end worldgenerator.Coordinate) []worldgenerator.Coordinate {
+	var ret []worldgenerator.Coordinate
+	pick := end
+	_, found := cameFrom[pick]
+	for found {
+		ret = append(ret, pick)
+		pick = cameFrom[pick]
+		_, found = cameFrom[pick]
+	}
+	ret = append(ret, pick)
+	return ret
+}
+
+// Run ...
+func Run(w worldgenerator.World, start worldgenerator.Coordinate, end worldgenerator.Coordinate) []worldgenerator.Coordinate {
+	var openSet []worldgenerator.Coordinate
+	openSet = append(openSet, start)
+	cameFrom := make(map[worldgenerator.Coordinate]worldgenerator.Coordinate)
+
+	fScore := make(map[worldgenerator.Coordinate]float64)
+	gScore := make(map[worldgenerator.Coordinate]float64)
+	gScore[start] = 0.0
+	fScore[start] = getDistance(start, end)
+
+	for len(openSet) != 0 {
+		current := minScore(openSet, fScore)
+		pick := openSet[current]
+		openSet = append(openSet[:current], openSet[current+1:]...)
+
+		fmt.Println(pick)
+		if pick == end {
+
+			return reconstructPath(cameFrom, end)
+		}
+
 		neighborhood := getNeighborhood(w, pick)
-		fmt.Print("neighborhood>", neighborhood, "\n")
-		for _, neighbour := range neighborhood {
-			_, found := m[neighbour]
+
+		for _, neighbor := range neighborhood {
+			// fmt.Print(neighbor)
+			_, found := gScore[neighbor]
 			if !found {
-				m[neighbour] = m[pick] + 1
-				worklist = append(worklist, pair{getDistance(neighbour, end), neighbour})
+				gScore[neighbor] = gScore[pick] + 1
+				fScore[neighbor] = gScore[pick] + 1 + getDistance(neighbor, end)
+				cameFrom[neighbor] = pick
+				_, elementFound := Find(openSet, neighbor)
+				if !elementFound {
+					openSet = append(openSet, neighbor)
+				}
+			} else {
+				if gScore[pick]+1 < gScore[neighbor] {
+					gScore[neighbor] = gScore[pick] + 1
+					fScore[neighbor] = gScore[pick] + 1 + getDistance(neighbor, end)
+					cameFrom[neighbor] = pick
+					_, elementFound := Find(openSet, neighbor)
+					if !elementFound {
+						openSet = append(openSet, neighbor)
+					}
+				}
 			}
 		}
-
-		fmt.Print("worklist>", worklist, "\n")
-		// find cell with min distance at the end
-		var minIndex = 0
-		for i, e := range worklist {
-			if e.distance < worklist[minIndex].distance {
-				minIndex = i
-			}
-		}
-		pick = worklist[minIndex].cell
-		fmt.Print(pick, "\n")
-		worklist = worklist[:0]
 	}
-
-	//
-	neighborhood := getNeighborhood(w, pick)
-	fmt.Print("neighborhood>", neighborhood, "\n")
-	for _, neighbour := range neighborhood {
-		_, found := m[neighbour]
-		if !found {
-			m[neighbour] = m[pick] + 1
-			worklist = append(worklist, pair{getDistance(neighbour, end), neighbour})
-		}
-	}
-
-	// Rebuild of the path
-	pick = end
-	path = append(path, pick)
-	for pick != start {
-		neighborhood := getNeighborhood(w, pick)
-		min_value := neighborhood[0]
-		for _, neighbour := range neighborhood {
-			fmt.Print("(", neighbour, " : ", m[neighbour], ") ")
-			if m[neighbour] < m[min_value] {
-				min_value = neighbour
-			}
-		}
-
-		pick = min_value
-		fmt.Println("\n>", pick)
-		path = append(path, pick)
-		// return
-	}
-	return path
-	// fmt.Println(path)
+	return []worldgenerator.Coordinate{}
 }

@@ -1,9 +1,10 @@
-package aStar
+package astar
 
 import (
 	"testing"
 
-	"github.com/jxtopher/a_star/worldGenerator"
+	"github.com/jxtopher/a_star/worldgenerator"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestGetNeighborhood(t *testing.T) {
@@ -14,37 +15,23 @@ func TestGetNeighborhood(t *testing.T) {
 		world[i] = make([]uint8, ySize)
 	}
 
-	w := worldGenerator.World{xSize, ySize, world}
+	w := worldgenerator.World{Xsize: xSize, Ysize: ySize, Ground: world}
 	w.Init(0)
 
-	pick := worldGenerator.Coordinate{5, 5}
-	if len(getNeighborhood(w, pick)) != 8 {
-		t.Error("")
-	}
-	pick = worldGenerator.Coordinate{0, 0}
-	if len(getNeighborhood(w, pick)) != 3 {
-		t.Error("")
-	}
-	pick = worldGenerator.Coordinate{49, 49}
-	if len(getNeighborhood(w, pick)) != 3 {
-		t.Error("")
-	}
-	pick = worldGenerator.Coordinate{0, 49}
-	if len(getNeighborhood(w, pick)) != 3 {
-		t.Error("")
-	}
-	pick = worldGenerator.Coordinate{49, 0}
-	if len(getNeighborhood(w, pick)) != 3 {
-		t.Error("")
-	}
-	pick = worldGenerator.Coordinate{49, 15}
-	if len(getNeighborhood(w, pick)) != 5 {
-		t.Error("")
-	}
+	pick := worldgenerator.Coordinate{X: 5, Y: 5}
+	assert.Equal(t, len(getNeighborhood(w, pick)), 8, "they should be equal")
+	pick = worldgenerator.Coordinate{X: 0, Y: 0}
+	assert.Equal(t, len(getNeighborhood(w, pick)), 3, "they should be equal")
+	pick = worldgenerator.Coordinate{X: 49, Y: 49}
+	assert.Equal(t, len(getNeighborhood(w, pick)), 3, "they should be equal")
+	pick = worldgenerator.Coordinate{X: 0, Y: 49}
+	assert.Equal(t, len(getNeighborhood(w, pick)), 3, "they should be equal")
+	pick = worldgenerator.Coordinate{X: 49, Y: 0}
+	assert.Equal(t, len(getNeighborhood(w, pick)), 3, "they should be equal")
+	pick = worldgenerator.Coordinate{X: 49, Y: 15}
+	assert.Equal(t, len(getNeighborhood(w, pick)), 5, "they should be equal")
 }
 
 func TestGetDistance(t *testing.T) {
-	if getDistance(worldGenerator.Coordinate{50, 50}, worldGenerator.Coordinate{0, 0})-70.71 > 0.1 {
-		t.Error("")
-	}
+	assert.Less(t, getDistance(worldgenerator.Coordinate{X: 50, Y: 50}, worldgenerator.Coordinate{X: 0, Y: 0})-70.71, 0.1, "")
 }

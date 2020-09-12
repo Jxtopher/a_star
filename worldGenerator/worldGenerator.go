@@ -1,4 +1,4 @@
-package worldGenerator
+package worldgenerator
 
 import (
 	"fmt"
@@ -6,25 +6,30 @@ import (
 )
 
 const (
+	// Empty ...
 	Empty uint8 = 0
-	Bloc  uint8 = 1
+	// Bloc ...
+	Bloc uint8 = 1
 )
 
+// Coordinate ...
 type Coordinate struct {
 	X uint64
 	Y uint64
 }
 
+// World ...
 type World struct {
-	X_size uint64
-	Y_size uint64
+	Xsize  uint64
+	Ysize  uint64
 	Ground [][]uint8
 }
 
+// Init the world
 func (w World) Init(p float64) {
 	var i, j uint64
-	for i = 0; i < w.X_size; i++ {
-		for j = 0; j < w.Y_size; j++ {
+	for i = 0; i < w.Xsize; i++ {
+		for j = 0; j < w.Ysize; j++ {
 			if rand.Float64() < p {
 				w.Ground[i][j] = Bloc
 			}
@@ -32,10 +37,11 @@ func (w World) Init(p float64) {
 	}
 }
 
+// Show the world
 func (w World) Show() {
 	var i, j uint64
-	for i = 0; i < w.X_size; i++ {
-		for j = 0; j < w.Y_size; j++ {
+	for i = 0; i < w.Xsize; i++ {
+		for j = 0; j < w.Ysize; j++ {
 			//   fmt.Printf("a[%d][%d] = %d\n", i,j, w.Ground[i][j] )
 			fmt.Printf("%d ", w.Ground[i][j])
 		}
