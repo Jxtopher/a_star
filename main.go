@@ -1,8 +1,9 @@
 package main
 
 import (
-	"fmt"
+	"flag"
 
+	"github.com/jxtopher/a_star/astar"
 	"github.com/jxtopher/a_star/worldgen"
 )
 
@@ -16,29 +17,21 @@ import (
 // 6 0 0 0 0 0 0 0
 
 func main() {
-	w := worldgen.Init(7, 7, 0.1)
-	// w := worldgen.Loadjson("./dataworld/world.json")
-	w.Show()
-	fmt.Print(w.GetBox(4, 3))
+	// command-Line Flags
+	worldPtr := flag.String("world", "", "a string")
+	flag.Parse()
 
-	// var xSize uint64 = 7
-	// var ySize uint64 = 7
-	// world := make([][]uint8, xSize)
-	// for i := range world {
-	// 	world[i] = make([]uint8, ySize)
-	// }
+	var w worldgen.World
+	if *worldPtr == "" {
+		w = worldgen.Init(7, 7, 0.1)
+		w.Show()
+	} else {
+		// go run .\main.go -world=".\dataworld\world.json"
+		w = worldgen.Loadjson(*worldPtr)
+		w.Show()
+	}
 
-	// w := worldgen.World{Xsize: xSize, Ysize: ySize, Ground: world}
-	// w.Ground = [][]uint8{
-	// 	{0, 0, 0, 0, 0, 0, 0},
-	// 	{0, 0, 0, 0, 0, 0, 0},
-	// 	{0, 0, 0, 0, 0, 0, 0},
-	// 	{0, 0, 0, 0, 0, 0, 0},
-	// 	{0, 0, 0, 0, 0, 0, 0},
-	// 	{0, 0, 0, 0, 0, 0, 0},
-	// 	{0, 0, 0, 0, 0, 0, 0},
-	// }
-
+	// Find path
 	// var path []worldgen.Coordinate
 	// if w.Ground[2][0] == worldgen.Empty && w.Ground[2][3] == worldgen.Empty {
 	// 	path = astar.Run(
@@ -47,5 +40,5 @@ func main() {
 	// }
 	// fmt.Print(path)
 
-	// astar.Plot(w, path)
+	astar.Plot("hello", w, []worldgen.Coordinate{})
 }

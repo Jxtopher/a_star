@@ -10,17 +10,15 @@ import (
 	"github.com/llgcode/draw2d/draw2dkit"
 )
 
-// Plot world
-func Plot(w worldgen.World, path []worldgen.Coordinate) {
-	// dest := draw2dpdf.NewPdf("L", "mm", "A4")
-	// gc := draw2dpdf.NewGraphicContext(dest)
-	dest := image.NewRGBA(image.Rect(0, 0, int(w.Xsize*10), int(w.Ysize*10)))
+// Plot the world with the path
+func Plot(file string, w worldgen.World, path []worldgen.Coordinate) {
+	dest := image.NewRGBA(image.Rect(0, 0, int(w.Xsize*50), int(w.Ysize*50)))
 	gc := draw2dimg.NewGraphicContext(dest)
 
 	// Background
 	white := color.RGBA{0xff, 0xff, 0xff, 0xff}
 	gc.SetFillColor(white)
-	draw2dkit.Rectangle(gc, float64(0), float64(0), float64(w.Xsize*10), float64(w.Ysize*10))
+	draw2dkit.Rectangle(gc, float64(0), float64(0), float64(w.Xsize*50), float64(w.Ysize*50))
 	gc.Fill()
 
 	// sqaure -> blocks
@@ -33,38 +31,39 @@ func Plot(w worldgen.World, path []worldgen.Coordinate) {
 		for j = 0; j < w.Ysize; j++ {
 			if w.Ground[i][j] == worldgen.Bloc {
 				draw2dkit.Rectangle(
-					gc, float64(i*10), float64(j*10), float64(i*10+10), float64(j*10+10),
+					gc, float64(j*50), float64(i*50), float64(j*50+50), float64(i*50+50),
 				)
 			}
 		}
 	}
 	gc.Fill()
 
-	// //
+	// Path
 	gc.SetFillColor(color.RGBA{0x44, 0xff, 0x44, 0xff})
 	gc.SetStrokeColor(color.RGBA{0x44, 0x44, 0x44, 0xff})
 	gc.SetLineWidth(5)
-	// gc.MoveTo(10, 10)
+
+	gc.BeginPath()
 	for _, coor := range path {
 		fmt.Println(coor)
-		gc.LineTo(float64(coor.X*10), float64(coor.Y*10))
+		gc.LineTo(float64(coor.X*50), float64(coor.Y*50))
 	}
 	gc.Stroke()
 
-	// // Set some properties
+	// start
+	bleu := color.RGBA{0x0, 0x0, 0xFF, 0xff}
+	gc.SetFillColor(bleu)
+	gc.SetStrokeColor(bleu)
+	draw2dkit.Rectangle(gc, float64(path[0].X*50), float64(path[0].Y*50), float64(path[0].X*50+50), float64(path[0].Y*50+50))
+	gc.Fill()
 
-	// // Draw a closed shape
-	// // gc.BeginPath() // Initialize a new path
+	// end
+	red := color.RGBA{0xFF, 0x0, 0x0, 0xff}
+	gc.SetFillColor(red)
+	gc.SetStrokeColor(red)
+	draw2dkit.Rectangle(gc, float64(path[len(path)-1].X*50), float64(path[len(path)-1].Y*50), float64(path[len(path)-1].X*50+50), float64(path[len(path)-1].Y*50+50))
+	gc.Fill()
 
-	// gc.LineTo(30, 30)
-	// gc.LineTo(30, 40)
-	// gc.Stroke()
-
-	// gc.Stroke()
-	// gc.Close()
-	// gc.FillStroke()
-
-	// Save to file
-	// draw2dpdf.SaveToPdfFile("hello.pdf", dest)
-	draw2dimg.SaveToPngFile("hello.png", dest)
+	// save to file
+	draw2dimg.SaveToPngFile(file+".png", dest) //"./results/"+
 }
