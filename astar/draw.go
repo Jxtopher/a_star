@@ -12,13 +12,14 @@ import (
 
 // Plot the world with the path
 func Plot(file string, w worldgen.World, path []worldgen.Coordinate) {
-	dest := image.NewRGBA(image.Rect(0, 0, int(w.Xsize*50), int(w.Ysize*50)))
+	resolution := uint64(50)
+	dest := image.NewRGBA(image.Rect(0, 0, int(w.Xsize*resolution), int(w.Ysize*resolution)))
 	gc := draw2dimg.NewGraphicContext(dest)
 
 	// Background
 	white := color.RGBA{0xff, 0xff, 0xff, 0xff}
 	gc.SetFillColor(white)
-	draw2dkit.Rectangle(gc, float64(0), float64(0), float64(w.Xsize*50), float64(w.Ysize*50))
+	draw2dkit.Rectangle(gc, float64(0), float64(0), float64(w.Xsize*resolution), float64(w.Ysize*resolution))
 	gc.Fill()
 
 	// sqaure -> blocks
@@ -31,7 +32,11 @@ func Plot(file string, w worldgen.World, path []worldgen.Coordinate) {
 		for j = 0; j < w.Ysize; j++ {
 			if w.Ground[i][j] == worldgen.Bloc {
 				draw2dkit.Rectangle(
-					gc, float64(j*50), float64(i*50), float64(j*50+50), float64(i*50+50),
+					gc,
+					float64(j*resolution),
+					float64(i*resolution),
+					float64(j*resolution+resolution),
+					float64(i*resolution+resolution),
 				)
 			}
 		}
@@ -46,22 +51,30 @@ func Plot(file string, w worldgen.World, path []worldgen.Coordinate) {
 	gc.BeginPath()
 	for _, coor := range path {
 		fmt.Println(coor)
-		gc.LineTo(float64(coor.X*50), float64(coor.Y*50))
+		gc.LineTo(float64(coor.X*resolution), float64(coor.Y*resolution))
 	}
 	gc.Stroke()
 
 	// start
-	bleu := color.RGBA{0x0, 0x0, 0xFF, 0xff}
-	gc.SetFillColor(bleu)
-	gc.SetStrokeColor(bleu)
-	draw2dkit.Rectangle(gc, float64(path[0].X*50), float64(path[0].Y*50), float64(path[0].X*50+50), float64(path[0].Y*50+50))
+	royalblue := color.RGBA{0x41, 0x69, 0xE1, 0xff}
+	gc.SetFillColor(royalblue)
+	gc.SetStrokeColor(royalblue)
+	draw2dkit.Rectangle(gc,
+		float64(path[0].X*resolution),
+		float64(path[0].Y*resolution),
+		float64(path[0].X*resolution+resolution),
+		float64(path[0].Y*resolution+resolution))
 	gc.Fill()
 
 	// end
 	red := color.RGBA{0xFF, 0x0, 0x0, 0xff}
 	gc.SetFillColor(red)
 	gc.SetStrokeColor(red)
-	draw2dkit.Rectangle(gc, float64(path[len(path)-1].X*50), float64(path[len(path)-1].Y*50), float64(path[len(path)-1].X*50+50), float64(path[len(path)-1].Y*50+50))
+	draw2dkit.Rectangle(gc,
+		float64(path[len(path)-1].X*resolution),
+		float64(path[len(path)-1].Y*resolution),
+		float64(path[len(path)-1].X*resolution+resolution),
+		float64(path[len(path)-1].Y*resolution+resolution))
 	gc.Fill()
 
 	// save to file
