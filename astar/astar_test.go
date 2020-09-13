@@ -8,15 +8,7 @@ import (
 )
 
 func TestGetNeighborhood(t *testing.T) {
-	var xSize uint64 = 50
-	var ySize uint64 = 50
-	world := make([][]uint8, xSize)
-	for i := range world {
-		world[i] = make([]uint8, ySize)
-	}
-
-	w := worldgen.World{Xsize: xSize, Ysize: ySize, Ground: world}
-	w.Init(0)
+	w := worldgen.Init(50, 50, 0)
 
 	pick := worldgen.Coordinate{X: 5, Y: 5}
 	assert.Equal(t, len(getNeighborhood(w, pick)), 8, "they should be equal")
@@ -37,5 +29,5 @@ func TestGetDistance(t *testing.T) {
 		worldgen.Coordinate{X: 50, Y: 50},
 		worldgen.Coordinate{X: 0, Y: 0},
 	)
-	assert.Less(t, distance-70.71, 0.1, "")
+	assert.Equal(t, distance, 100.0, "")
 }

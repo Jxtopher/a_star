@@ -50,7 +50,7 @@ func getNeighborhood(
 	return neighborhood
 }
 
-// Give distance between two nodes
+// Give taxicab geometry distance between two nodes
 func getDistance(a worldgen.Coordinate, b worldgen.Coordinate) float64 {
 	return math.Abs(float64(int64(a.X-b.X))) + math.Abs(float64(int64(a.Y-b.Y)))
 }
