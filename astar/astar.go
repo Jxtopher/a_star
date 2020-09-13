@@ -18,32 +18,32 @@ func getNeighborhood(
 ) []worldgen.Coordinate {
 	var neighborhood []worldgen.Coordinate
 
-	if pick.Y < w.Ysize-1 && w.Ground[pick.X][pick.Y+1] == worldgen.Empty {
+	if pick.Y < w.Ysize-1 && w.GetBox(pick.X, pick.Y+1) == worldgen.Empty {
 		neighborhood = append(
 			neighborhood, worldgen.Coordinate{X: pick.X, Y: pick.Y + 1},
 		)
 	}
 	if pick.X < w.Xsize-1 && pick.Y < w.Ysize-1 &&
-		w.Ground[pick.X+1][pick.Y+1] == worldgen.Empty {
+		w.GetBox(pick.X+1, pick.Y+1) == worldgen.Empty {
 		// then
 		neighborhood = append(neighborhood, worldgen.Coordinate{X: pick.X + 1, Y: pick.Y + 1})
 	}
-	if pick.X < w.Xsize-1 && w.Ground[pick.X+1][pick.Y] == worldgen.Empty {
+	if pick.X < w.Xsize-1 && w.GetBox(pick.X+1, pick.Y) == worldgen.Empty {
 		neighborhood = append(neighborhood, worldgen.Coordinate{X: pick.X + 1, Y: pick.Y})
 	}
-	if pick.X < w.Xsize-1 && pick.Y > 0 && w.Ground[pick.X+1][pick.Y-1] == worldgen.Empty {
+	if pick.X < w.Xsize-1 && pick.Y > 0 && w.GetBox(pick.X+1, pick.Y-1) == worldgen.Empty {
 		neighborhood = append(neighborhood, worldgen.Coordinate{X: pick.X + 1, Y: pick.Y - 1})
 	}
-	if pick.Y > 0 && w.Ground[pick.X][pick.Y-1] == worldgen.Empty {
+	if pick.Y > 0 && w.GetBox(pick.X, pick.Y-1) == worldgen.Empty {
 		neighborhood = append(neighborhood, worldgen.Coordinate{X: pick.X, Y: pick.Y - 1})
 	}
-	if pick.X > 0 && pick.Y > 0 && w.Ground[pick.X-1][pick.Y-1] == worldgen.Empty {
+	if pick.X > 0 && pick.Y > 0 && w.GetBox(pick.X-1, pick.Y-1) == worldgen.Empty {
 		neighborhood = append(neighborhood, worldgen.Coordinate{X: pick.X - 1, Y: pick.Y - 1})
 	}
-	if pick.X > 0 && w.Ground[pick.X-1][pick.Y] == worldgen.Empty {
+	if pick.X > 0 && w.GetBox(pick.X-1, pick.Y) == worldgen.Empty {
 		neighborhood = append(neighborhood, worldgen.Coordinate{X: pick.X - 1, Y: pick.Y})
 	}
-	if pick.X > 0 && pick.Y < w.Ysize-1 && w.Ground[pick.X-1][pick.Y+1] == worldgen.Empty {
+	if pick.X > 0 && pick.Y < w.Ysize-1 && w.GetBox(pick.X-1, pick.Y+1) == worldgen.Empty {
 		neighborhood = append(neighborhood, worldgen.Coordinate{X: pick.X - 1, Y: pick.Y + 1})
 	}
 
@@ -72,7 +72,7 @@ func minScore(set []worldgen.Coordinate, fScore map[worldgen.Coordinate]float64)
 
 // Find takes a slice and looks for an element in it. If found it will
 // return it's key, otherwise it will return -1 and a bool of false.
-func Find(slice []worldgen.Coordinate, val worldgen.Coordinate) (int, bool) {
+func find(slice []worldgen.Coordinate, val worldgen.Coordinate) (int, bool) {
 	for i, item := range slice {
 		if item == val {
 			return i, true
@@ -118,7 +118,6 @@ func Run(
 
 		fmt.Println(current)
 		if current == end {
-
 			return reconstructPath(cameFrom, end)
 		}
 
@@ -130,7 +129,7 @@ func Run(
 				gScore[neighbor] = gScore[current] + 1
 				fScore[neighbor] = gScore[current] + 1 + getDistance(neighbor, end)
 				cameFrom[neighbor] = current
-				_, elementFound := Find(openSet, neighbor)
+				_, elementFound := find(openSet, neighbor)
 				if !elementFound {
 					openSet = append(openSet, neighbor)
 				}
@@ -139,7 +138,7 @@ func Run(
 					gScore[neighbor] = gScore[current] + 1
 					fScore[neighbor] = gScore[current] + 1 + getDistance(neighbor, end)
 					cameFrom[neighbor] = current
-					_, elementFound := Find(openSet, neighbor)
+					_, elementFound := find(openSet, neighbor)
 					if !elementFound {
 						openSet = append(openSet, neighbor)
 					}
