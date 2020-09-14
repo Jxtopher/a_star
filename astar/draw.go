@@ -1,7 +1,6 @@
 package astar
 
 import (
-	"fmt"
 	"image"
 	"image/color"
 
@@ -50,32 +49,35 @@ func Plot(file string, w worldgen.World, path []worldgen.Coordinate) {
 
 	gc.BeginPath()
 	for _, coor := range path {
-		fmt.Println(coor)
-		gc.LineTo(float64(coor.X*resolution), float64(coor.Y*resolution))
+		// fmt.Println(coor)
+		gc.LineTo(float64(coor.X*resolution+resolution/2),
+			float64(coor.Y*resolution+resolution/2))
 	}
 	gc.Stroke()
 
-	// start
-	royalblue := color.RGBA{0x41, 0x69, 0xE1, 0xff}
-	gc.SetFillColor(royalblue)
-	gc.SetStrokeColor(royalblue)
-	draw2dkit.Rectangle(gc,
-		float64(path[0].X*resolution),
-		float64(path[0].Y*resolution),
-		float64(path[0].X*resolution+resolution),
-		float64(path[0].Y*resolution+resolution))
-	gc.Fill()
+	if len(path) > 1 {
+		// start
+		royalblue := color.RGBA{0x41, 0x69, 0xE1, 0xff}
+		gc.SetFillColor(royalblue)
+		gc.SetStrokeColor(royalblue)
+		draw2dkit.Rectangle(gc,
+			float64(path[0].X*resolution),
+			float64(path[0].Y*resolution),
+			float64(path[0].X*resolution+resolution),
+			float64(path[0].Y*resolution+resolution))
+		gc.Fill()
 
-	// end
-	red := color.RGBA{0xFF, 0x0, 0x0, 0xff}
-	gc.SetFillColor(red)
-	gc.SetStrokeColor(red)
-	draw2dkit.Rectangle(gc,
-		float64(path[len(path)-1].X*resolution),
-		float64(path[len(path)-1].Y*resolution),
-		float64(path[len(path)-1].X*resolution+resolution),
-		float64(path[len(path)-1].Y*resolution+resolution))
-	gc.Fill()
+		// end
+		red := color.RGBA{0xFF, 0x0, 0x0, 0xff}
+		gc.SetFillColor(red)
+		gc.SetStrokeColor(red)
+		draw2dkit.Rectangle(gc,
+			float64(path[len(path)-1].X*resolution),
+			float64(path[len(path)-1].Y*resolution),
+			float64(path[len(path)-1].X*resolution+resolution),
+			float64(path[len(path)-1].Y*resolution+resolution))
+		gc.Fill()
+	}
 
 	// save to file
 	draw2dimg.SaveToPngFile(file+".png", dest) //"./results/"+
