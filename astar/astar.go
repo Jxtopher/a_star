@@ -11,7 +11,7 @@ type pair struct {
 	cell     worldgen.Coordinate
 }
 
-// Give all free neighord nodes of the node chose
+// getNeighborhood give all free neighord nodes of the node chose
 func getNeighborhood(
 	w worldgen.World, pick worldgen.Coordinate, mooreNeighborhood bool) []worldgen.Coordinate {
 	var neighborhood []worldgen.Coordinate
@@ -48,12 +48,12 @@ func getNeighborhood(
 	return neighborhood
 }
 
-// Give taxicab geometry distance between two nodes
+// getDistance give taxicab geometry distance between two nodes
 func getDistance(a worldgen.Coordinate, b worldgen.Coordinate) float64 {
 	return math.Abs(float64(int64(a.X-b.X))) + math.Abs(float64(int64(a.Y-b.Y)))
 }
 
-// Returns an index on the node's set with the minimum fScore
+// minScore returns an index on the node's set with the minimum fScore
 func minScore(set []worldgen.Coordinate, fScore map[worldgen.Coordinate]float64) int {
 	minElement := 0
 	for i, element := range set {
@@ -95,6 +95,7 @@ func reconstructPath(
 	return ret
 }
 
+// Run the algorithm A*
 func Run(
 	w worldgen.World,
 	start worldgen.Coordinate,
