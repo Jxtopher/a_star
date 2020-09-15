@@ -14,8 +14,7 @@ type pair struct {
 
 // Give all free neighord nodes of the node chose
 func getNeighborhood(
-	w worldgen.World, pick worldgen.Coordinate,
-) []worldgen.Coordinate {
+	w worldgen.World, pick worldgen.Coordinate, mooreNeighborhood bool) []worldgen.Coordinate {
 	var neighborhood []worldgen.Coordinate
 
 	if pick.Y < w.Ysize-1 && w.GetBox(pick.X, pick.Y+1) == worldgen.Empty {
@@ -23,27 +22,27 @@ func getNeighborhood(
 			neighborhood, worldgen.Coordinate{X: pick.X, Y: pick.Y + 1},
 		)
 	}
-	if pick.X < w.Xsize-1 && pick.Y < w.Ysize-1 &&
+	if mooreNeighborhood && pick.X < w.Xsize-1 && pick.Y < w.Ysize-1 &&
 		w.GetBox(pick.X+1, pick.Y+1) == worldgen.Empty {
-		// then
 		neighborhood = append(neighborhood, worldgen.Coordinate{X: pick.X + 1, Y: pick.Y + 1})
 	}
 	if pick.X < w.Xsize-1 && w.GetBox(pick.X+1, pick.Y) == worldgen.Empty {
 		neighborhood = append(neighborhood, worldgen.Coordinate{X: pick.X + 1, Y: pick.Y})
 	}
-	if pick.X < w.Xsize-1 && pick.Y > 0 && w.GetBox(pick.X+1, pick.Y-1) == worldgen.Empty {
+
+	if mooreNeighborhood && pick.X < w.Xsize-1 && pick.Y > 0 && w.GetBox(pick.X+1, pick.Y-1) == worldgen.Empty {
 		neighborhood = append(neighborhood, worldgen.Coordinate{X: pick.X + 1, Y: pick.Y - 1})
 	}
 	if pick.Y > 0 && w.GetBox(pick.X, pick.Y-1) == worldgen.Empty {
 		neighborhood = append(neighborhood, worldgen.Coordinate{X: pick.X, Y: pick.Y - 1})
 	}
-	if pick.X > 0 && pick.Y > 0 && w.GetBox(pick.X-1, pick.Y-1) == worldgen.Empty {
+	if mooreNeighborhood && pick.X > 0 && pick.Y > 0 && w.GetBox(pick.X-1, pick.Y-1) == worldgen.Empty {
 		neighborhood = append(neighborhood, worldgen.Coordinate{X: pick.X - 1, Y: pick.Y - 1})
 	}
 	if pick.X > 0 && w.GetBox(pick.X-1, pick.Y) == worldgen.Empty {
 		neighborhood = append(neighborhood, worldgen.Coordinate{X: pick.X - 1, Y: pick.Y})
 	}
-	if pick.X > 0 && pick.Y < w.Ysize-1 && w.GetBox(pick.X-1, pick.Y+1) == worldgen.Empty {
+	if mooreNeighborhood && pick.X > 0 && pick.Y < w.Ysize-1 && w.GetBox(pick.X-1, pick.Y+1) == worldgen.Empty {
 		neighborhood = append(neighborhood, worldgen.Coordinate{X: pick.X - 1, Y: pick.Y + 1})
 	}
 
@@ -121,13 +120,13 @@ func Run(
 			return reconstructPath(cameFrom, end)
 		}
 
-		neighborhood := getNeighborhood(w, current)
+		neighborhood := getNeighborhood(w, current, false)
 
 		for _, neighbor := range neighborhood {
 			_, found := gScore[neighbor]
 			if !found {
 				gScore[neighbor] = gScore[current] + 1
-				fScore[neighbor] = gScore[current] + 1 + getDistance(neighbor, end)
+				fScore[neighbor] = gScore[current] + 1 // + getDistance(neighbor, end)
 				cameFrom[neighbor] = current
 				_, elementFound := find(openSet, neighbor)
 				if !elementFound {
@@ -136,7 +135,7 @@ func Run(
 			} else {
 				if gScore[current]+1 < gScore[neighbor] {
 					gScore[neighbor] = gScore[current] + 1
-					fScore[neighbor] = gScore[current] + 1 + getDistance(neighbor, end)
+					fScore[neighbor] = gScore[current] + 1 //+ getDistance(neighbor, end)
 					cameFrom[neighbor] = current
 					_, elementFound := find(openSet, neighbor)
 					if !elementFound {

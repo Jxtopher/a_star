@@ -34,7 +34,7 @@ func main() {
 	var points startEnd
 
 	if *worldPtr == "" {
-		w = worldgen.Init(30, 30, 0)
+		w = worldgen.Init(30, 30, 0.2)
 		points.Start = []uint64{0, 0}
 		points.End = []uint64{29, 29}
 		w.Show()
