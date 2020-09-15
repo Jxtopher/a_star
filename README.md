@@ -33,4 +33,4 @@ make test TARGET=path/to/what/should/be/tested
 
 ## Example result
 
-![results](./results/results01.png "Shortest path" | width=100)
+![results](./results/results01.png | width=100 "Shortest path")
