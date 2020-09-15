@@ -1,6 +1,7 @@
 package astar
 
 import (
+	"log"
 	"math"
 
 	"github.com/jxtopher/a_star/worldgen"
@@ -116,6 +117,7 @@ func Run(
 		openSet = append(openSet[:currentIndex], openSet[currentIndex+1:]...)
 
 		if current == end {
+			log.Println("Proportion of box to explore:", (float64(len(gScore))/float64((w.Xsize*w.Ysize)))*100, "%")
 			return reconstructPath(cameFrom, end)
 		}
 
@@ -144,5 +146,7 @@ func Run(
 			}
 		}
 	}
+
+	log.Println("Proportion of box to explore:", (float64(len(gScore))/float64((w.Xsize*w.Ysize)))*100, "%")
 	return []worldgen.Coordinate{}
 }
