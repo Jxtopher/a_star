@@ -43,13 +43,12 @@ func Plot(file string, w worldgen.World, path []worldgen.Coordinate) {
 	gc.Fill()
 
 	// Path
-	gc.SetFillColor(color.RGBA{0x44, 0xff, 0x44, 0xff})
-	gc.SetStrokeColor(color.RGBA{0x44, 0x44, 0x44, 0xff})
+	gc.SetFillColor(color.RGBA{0x66, 0x99, 0x33, 0xff})
+	gc.SetStrokeColor(color.RGBA{0x66, 0x99, 0x33, 0xff})
 	gc.SetLineWidth(5)
 
 	gc.BeginPath()
 	for _, coor := range path {
-		// fmt.Println(coor)
 		gc.LineTo(float64(coor.X*resolution+resolution/2),
 			float64(coor.Y*resolution+resolution/2))
 	}

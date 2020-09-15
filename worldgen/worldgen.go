@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"math/rand"
 	"os"
 )
@@ -27,7 +28,6 @@ type World struct {
 // Init the World
 func Init(xsize uint64, ysize uint64, p float64) World {
 	w := World{Xsize: xsize, Ysize: ysize}
-	fmt.Println(w.Xsize)
 	w.Ground = make([][]uint8, w.Xsize)
 	for i := range w.Ground {
 		w.Ground[i] = make([]uint8, w.Ysize)
@@ -47,7 +47,7 @@ func Loadjson(pathFile string) World {
 	var w World
 	jsonFile, err := os.Open(pathFile)
 	if err != nil {
-		fmt.Println(err)
+		log.Fatal(err)
 	}
 	defer jsonFile.Close()
 	byteValue, _ := ioutil.ReadAll(jsonFile)

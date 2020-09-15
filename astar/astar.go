@@ -1,7 +1,6 @@
 package astar
 
 import (
-	"fmt"
 	"math"
 
 	"github.com/jxtopher/a_star/worldgen"
@@ -115,7 +114,6 @@ func Run(
 		current := openSet[currentIndex]
 		openSet = append(openSet[:currentIndex], openSet[currentIndex+1:]...)
 
-		fmt.Println(current)
 		if current == end {
 			return reconstructPath(cameFrom, end)
 		}

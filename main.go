@@ -3,8 +3,8 @@ package main
 import (
 	"encoding/json"
 	"flag"
-	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
 
 	"github.com/jxtopher/a_star/astar"
@@ -26,6 +26,7 @@ type startEnd struct {
 }
 
 func main() {
+	log.Println("Starting the search for a shorter path with algorithm A*")
 	// command-Line Flags
 	worldPtr := flag.String("world", "", "a string")
 	flag.Parse()
@@ -37,33 +38,29 @@ func main() {
 		w = worldgen.Init(50, 50, 0.3)
 		points.Start = []uint64{0, 0}
 		points.End = []uint64{49, 49}
-		w.Show()
+		// w.Show()
 	} else {
 		// go run .\main.go -world=".\dataworld\world.json"
 		w = worldgen.Loadjson(*worldPtr)
-		w.Show()
+		// w.Show()
 
 		jsonFile, err := os.Open(*worldPtr)
 		if err != nil {
-			fmt.Println(err)
+			log.Fatal(err)
 		}
 		defer jsonFile.Close()
 		byteValue, _ := ioutil.ReadAll(jsonFile)
 		json.Unmarshal(byteValue, &points)
-		fmt.Print(points.End)
-
 	}
 
 	// Find path
 	var path []worldgen.Coordinate
-	// if w.Ground[2][0] == worldgen.Empty && w.Ground[2][3] == worldgen.Empty {
 	path = astar.Run(
 		w,
 		worldgen.Coordinate{X: points.Start[0], Y: points.Start[1]},
 		worldgen.Coordinate{X: points.End[0], Y: points.End[1]},
 	)
-	// }
-	// fmt.Print(path)
 
+	log.Println("Plot the solution")
 	astar.Plot("hello", w, path)
 }
