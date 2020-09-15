@@ -30,3 +30,7 @@ Or specific tests with:
 ```
 make test TARGET=path/to/what/should/be/tested
 ```
+
+## Example results
+
+![results](./results/results01.png "Shortest path")
