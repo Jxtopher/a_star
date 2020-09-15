@@ -1,5 +1,8 @@
 # A\* search algorithm
 
+[![GoDoc](https://godoc.org/github.com/Jxtopher/a_star?status.svg)](https://godoc.org/github.com/Jxtopher/a_star/astar)
+
+
 ## Setup
 
 Install with
