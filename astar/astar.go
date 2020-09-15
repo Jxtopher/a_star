@@ -126,7 +126,7 @@ func Run(
 			_, found := gScore[neighbor]
 			if !found {
 				gScore[neighbor] = gScore[current] + 1
-				fScore[neighbor] = gScore[current] + 1 // + getDistance(neighbor, end)
+				fScore[neighbor] = getDistance(neighbor, end)
 				cameFrom[neighbor] = current
 				_, elementFound := find(openSet, neighbor)
 				if !elementFound {
@@ -135,7 +135,7 @@ func Run(
 			} else {
 				if gScore[current]+1 < gScore[neighbor] {
 					gScore[neighbor] = gScore[current] + 1
-					fScore[neighbor] = gScore[current] + 1 //+ getDistance(neighbor, end)
+					fScore[neighbor] = getDistance(neighbor, end)
 					cameFrom[neighbor] = current
 					_, elementFound := find(openSet, neighbor)
 					if !elementFound {
