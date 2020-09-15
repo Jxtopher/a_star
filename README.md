@@ -1,4 +1,4 @@
-# a_star
+# A\*
 
 A\* search algorithm
 
