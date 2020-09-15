@@ -33,4 +33,4 @@ make test TARGET=path/to/what/should/be/tested
 
 ## Example result
 
-<img src="./results/results01.png"  width="200" height="200" />
+<img src="./results/results01.png"  width="500" height="500" />
